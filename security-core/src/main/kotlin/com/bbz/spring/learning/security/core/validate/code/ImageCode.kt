@@ -7,6 +7,10 @@ import java.time.LocalDateTime
  * 图形验证码
  */
 class ImageCode (val image: BufferedImage,val code: String,expireSec: Int){
-    val expireDate: LocalDateTime = LocalDateTime.now().plusSeconds(expireSec as Long)
+    private val expireDate = LocalDateTime.now().plusSeconds(expireSec.toLong())
+    val isExpried: Boolean
+    get() {
+        return LocalDateTime.now().isAfter(expireDate)
+    }
 
 }
