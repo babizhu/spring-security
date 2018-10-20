@@ -11,5 +11,8 @@ class  SecurityProperties {
     @NestedConfigurationProperty
     var browser = BrowserProperties()
 
+    @NestedConfigurationProperty
+    val code = ValidateCodeProperties()
+
 
 }

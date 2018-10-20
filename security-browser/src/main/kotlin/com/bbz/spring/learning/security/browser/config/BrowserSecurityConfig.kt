@@ -28,6 +28,8 @@ class BrowserSecurityConfig : WebSecurityConfigurerAdapter() {
     override fun configure(http: HttpSecurity) {
         val validateCodeFilter = ValidateCodeFilter()
         validateCodeFilter.authenticationFailureHandler = customAuthenticationFailureHandler
+        validateCodeFilter.securityProperties = securityProperties
+        validateCodeFilter.afterPropertiesSet()
         http.addFilterBefore(validateCodeFilter,UsernamePasswordAuthenticationFilter::class.java)
                 .formLogin()
                 .loginPage("/authentication/require")

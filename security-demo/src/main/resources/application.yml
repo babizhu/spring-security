@@ -18,6 +18,12 @@ server:
 
 bbz:
   security:
+    code:
+      image:
+        length: 6
+        width: 100
+        url: /user,/user/*
+
     browser:
       t: t
 #      loginType: REDIRECT

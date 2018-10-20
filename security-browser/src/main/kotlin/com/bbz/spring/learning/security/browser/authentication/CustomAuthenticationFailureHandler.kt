@@ -1,5 +1,6 @@
 package com.bbz.spring.learning.security.browser.authentication
 
+import com.bbz.spring.learning.security.browser.support.SimpleResponse
 import com.bbz.spring.learning.security.core.properties.LoginType
 import com.bbz.spring.learning.security.core.properties.SecurityProperties
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -31,7 +32,8 @@ class CustomAuthenticationFailureHandler: SimpleUrlAuthenticationFailureHandler(
         if(securityProperties.browser.loginType == LoginType.JSON) {
             response.contentType = "application/json;charset=UTF-8"
             response.status = HttpStatus.INTERNAL_SERVER_ERROR.value()
-            response.writer.write(objectMapper.writeValueAsString(exception))
+            response.writer.write(objectMapper.writeValueAsString(SimpleResponse(exception.message!!)))
+//            response.writer.write(exception.message)
         }else{
             super.onAuthenticationFailure(request, response, exception)
         }

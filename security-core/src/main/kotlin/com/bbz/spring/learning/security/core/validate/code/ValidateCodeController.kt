@@ -1,10 +1,13 @@
 package com.bbz.spring.learning.security.core.validate.code
 
 
+import com.bbz.spring.learning.security.core.properties.SecurityProperties
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.RestController
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 import org.springframework.social.connect.web.HttpSessionSessionStrategy
+import org.springframework.web.bind.ServletRequestUtils
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.context.request.ServletWebRequest
 import java.awt.Color
@@ -16,6 +19,9 @@ import javax.imageio.ImageIO
 @RestController
 class ValidateCodeController {
 
+    @Autowired
+    private lateinit var securityProperties: SecurityProperties
+
     companion object {
         const val SESSION_KEY = "sesssion_key_image_code"
     }
@@ -24,24 +30,26 @@ class ValidateCodeController {
 
     @GetMapping("/code/image")
     fun createCode(request: HttpServletRequest, response: HttpServletResponse) {
-        var imageCode = createImageCode(request)
-        sessionStrategy.setAttribute(ServletWebRequest(request), SESSION_KEY,imageCode)
-        ImageIO.write(imageCode.image,"JPEG",response.outputStream)
+        val servletWebRequest = ServletWebRequest(request)
+        var imageCode = generate(servletWebRequest)
+        sessionStrategy.setAttribute(servletWebRequest, SESSION_KEY, imageCode)
+        ImageIO.write(imageCode.image, "JPEG", response.outputStream)
     }
 
-    private fun createImageCode(request: HttpServletRequest): ImageCode {
-        val width = 67
-        val height = 23
+    private fun generate(request: ServletWebRequest): ImageCode {
+        val width = ServletRequestUtils.getIntParameter(request.request, "width", securityProperties.code.image.width)
+        val height = ServletRequestUtils.getIntParameter(request.request, "height", securityProperties.code.image.height)
+
 
         val image = BufferedImage(width, height, BufferedImage.TYPE_INT_RGB)
         val graphics = image.graphics
 
         val random = Random()
-        graphics.color=getRandomColor(200,250)
+        graphics.color = getRandomColor(200, 250)
         graphics.fillRect(0, 0, width, height)
         graphics.font = Font("Times New Roman", Font.ITALIC, 20)
-        graphics.color=getRandomColor(160,200)
-        repeat(155){
+        graphics.color = getRandomColor(160, 200)
+        repeat(155) {
             val x = random.nextInt(width)
             val y = random.nextInt(height)
             val xLen = random.nextInt(12)
@@ -50,7 +58,7 @@ class ValidateCodeController {
 
         }
         var sRand = ""
-        repeat(4){
+        repeat(securityProperties.code.image.length) {
             val rand = random.nextInt(10).toString()
             sRand += rand
             graphics.color = Color(20 + random.nextInt(110), 20 + random.nextInt(110), 20 + random.nextInt(110))
@@ -59,7 +67,7 @@ class ValidateCodeController {
         }
 
         graphics.dispose()
-        return ImageCode(image,sRand,60)
+        return ImageCode(image, sRand, securityProperties.code.image.expireIn)
     }
 
     /**
