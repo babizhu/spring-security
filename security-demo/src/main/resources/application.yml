@@ -22,7 +22,7 @@ bbz:
       image:
         length: 6
         width: 100
-        url: /user,/user/*
+        url: /user/*
 
     browser:
       t: t

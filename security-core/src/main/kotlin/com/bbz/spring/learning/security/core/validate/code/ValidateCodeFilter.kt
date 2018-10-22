@@ -30,7 +30,7 @@ class ValidateCodeFilter : OncePerRequestFilter(), InitializingBean {
 
     override fun doFilterInternal(request: HttpServletRequest, response: HttpServletResponse, chain: FilterChain) {
         val match = urls.any { pathMatcher.match(it, request.requestURI) }
-        if (match && request.method == "POST") {
+        if (match /**&& request.method == "POST"**/) {
             try {
 
                 validate(ServletWebRequest(request))
