@@ -1,8 +1,7 @@
-package com.bbz.spring.learning.security.core.validate.code
+package com.bbz.spring.learning.security.core.validate.code.image
 
 import com.bbz.spring.learning.security.core.properties.SecurityProperties
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Component
+import com.bbz.spring.learning.security.core.validate.code.IValidateCodeGenerator
 import org.springframework.web.bind.ServletRequestUtils
 import org.springframework.web.context.request.ServletWebRequest
 import java.awt.Color
@@ -12,11 +11,11 @@ import java.util.*
 
 //@Component
 //故意省略了上面一行的@Component，而把配置工作放到了@ValidateCodeBeanConfig中，这样有利于有条件的产生此Component
-class ImageCodeGenerator:ValidateCodeGenerator {
+class ImageCodeGenerator: IValidateCodeGenerator {
 
     lateinit var securityProperties: SecurityProperties
 
-    override fun generator(request: ServletWebRequest): ImageCode {
+    override fun generate(request: ServletWebRequest): ImageCode {
         val width = ServletRequestUtils.getIntParameter(request.request, "width", securityProperties.code.image.width)
         val height = ServletRequestUtils.getIntParameter(request.request, "height", securityProperties.code.image.height)
 
@@ -54,9 +53,9 @@ class ImageCodeGenerator:ValidateCodeGenerator {
 /**
  * 生成随机背景条纹
  */
-private fun getRandomColor(fc: Int, bc: Int): Color {
-    var fc = fc
-    var bc = bc
+private fun getRandomColor(f: Int, bb: Int): Color {
+    var fc = f
+    var bc = bb
     val random = Random()
     if (fc > 255) {
         fc = 255

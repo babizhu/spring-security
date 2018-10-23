@@ -1,63 +1,82 @@
+/**
+ *
+ */
 package com.bbz.spring.learning.security.browser.config
 
-import com.bbz.spring.learning.security.browser.authentication.CustomAuthenticationFailureHandler
-import com.bbz.spring.learning.security.browser.authentication.CustomAuthenticationSuccessHandler
+import com.bbz.spring.learning.security.core.authentication.AbstractChannelSecurityConfig
+import com.bbz.spring.learning.security.core.authentication.mobile.SmsCodeAuthenticationSecurityConfig
+import com.bbz.spring.learning.security.core.properties.SecurityConstants
 import com.bbz.spring.learning.security.core.properties.SecurityProperties
-import com.bbz.spring.learning.security.core.validate.code.ValidateCodeFilter
+import com.bbz.spring.learning.security.core.validate.code.ValidateCodeSecurityConfig
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
+import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
+import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository
+import javax.sql.DataSource
 
-//@Configuration
-@EnableWebSecurity
-class BrowserSecurityConfig : WebSecurityConfigurerAdapter() {
+
+@Configuration
+class BrowserSecurityConfig : AbstractChannelSecurityConfig() {
+
     @Autowired
     private lateinit var securityProperties: SecurityProperties
 
     @Autowired
-    private lateinit var customAuthenticationSuccessHandler: CustomAuthenticationSuccessHandler
+    private lateinit var dataSource: DataSource
+
     @Autowired
-    private lateinit var customAuthenticationFailureHandler: CustomAuthenticationFailureHandler
+    private lateinit var userDetailsService: UserDetailsService
+
+    @Autowired
+    private lateinit var smsCodeAuthenticationSecurityConfig: SmsCodeAuthenticationSecurityConfig
+
+    @Autowired
+    private lateinit var validateCodeSecurityConfig: ValidateCodeSecurityConfig
 
 
+    @Throws(Exception::class)
     override fun configure(http: HttpSecurity) {
-        val validateCodeFilter = ValidateCodeFilter()
-        validateCodeFilter.authenticationFailureHandler = customAuthenticationFailureHandler
-        validateCodeFilter.securityProperties = securityProperties
-        validateCodeFilter.afterPropertiesSet()
-        http.addFilterBefore(validateCodeFilter,UsernamePasswordAuthenticationFilter::class.java)
-                .formLogin()
-                .loginPage("/authentication/require")
-                .loginProcessingUrl("/authentication/form")
-                .successHandler(customAuthenticationSuccessHandler)
-                .failureHandler(customAuthenticationFailureHandler)
-//        http.httpBasic()
+
+        applyPasswordAuthenticationConfig(http)
+
+        http.apply(validateCodeSecurityConfig)
+                .and()
+                .apply(smsCodeAuthenticationSecurityConfig)
+                .and()
+                .rememberMe()
+                .tokenRepository(persistentTokenRepository())
+                .tokenValiditySeconds(securityProperties.browser.rememberMeSeconds)
+                .userDetailsService(userDetailsService)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/authentication/require"
-                        , "/error"
-                        , securityProperties.browser.loginPage
-                        , "/code/image")
+                .antMatchers(
+                        SecurityConstants.DEFAULT_UNAUTHENTICATION_URL,
+                        SecurityConstants.DEFAULT_LOGIN_PROCESSING_URL_MOBILE,
+                        securityProperties.browser.loginPage,
+                        SecurityConstants.DEFAULT_VALIDATE_CODE_URL_PREFIX + "/*")
                 .permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()
                 .csrf().disable()
-//                .permitAll()
-    }
 
-//    override fun configure(auth: AuthenticationManagerBuilder) {
-////        auth.
-//    }
+    }
 
     @Bean
     fun passwordEncoder(): PasswordEncoder {
         return BCryptPasswordEncoder()
     }
 
+    @Bean
+    fun persistentTokenRepository(): PersistentTokenRepository {
+        val tokenRepository = JdbcTokenRepositoryImpl()
+        tokenRepository.setDataSource(dataSource)
+//        		tokenRepository.setCreateTableOnStartup(true)
+        return tokenRepository
+    }
 }

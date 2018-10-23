@@ -20,9 +20,11 @@ bbz:
   security:
     code:
       image:
+        length: 4
+#        width: 100
+#        url: /user/*
+      sms:
         length: 6
-        width: 100
-        url: /user/*
 
     browser:
       t: t

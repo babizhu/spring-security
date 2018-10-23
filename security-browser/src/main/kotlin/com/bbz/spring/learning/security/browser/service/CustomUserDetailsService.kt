@@ -9,7 +9,7 @@ import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Component
 
-@Component
+@Component("customUserDetailsService")
 class CustomUserDetailsService : UserDetailsService {
 
     companion object {
@@ -18,6 +18,7 @@ class CustomUserDetailsService : UserDetailsService {
 
     @Autowired
     private lateinit var passwordEncoder :PasswordEncoder
+
     override fun loadUserByUsername(username: String): UserDetails {
         log.info("登录用户名 : $username")
 
@@ -26,6 +27,6 @@ class CustomUserDetailsService : UserDetailsService {
                 true,
                 true,
                 true,
-                AuthorityUtils.commaSeparatedStringToAuthorityList("admin "))
+                AuthorityUtils.commaSeparatedStringToAuthorityList("admin"))
     }
 }
