@@ -9,6 +9,7 @@ import com.bbz.spring.learning.security.core.properties.SecurityConstants
 import com.bbz.spring.learning.security.core.properties.SecurityProperties
 import com.bbz.spring.learning.security.core.validate.code.config.ValidateCodeSecurityConfig
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.annotation.Bean
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
@@ -21,7 +22,7 @@ import javax.sql.DataSource
 
 
 @EnableWebSecurity
-class BrowserSecurityConfig : AbstractChannelSecurityConfig() {
+open class BrowserSecurityConfig : AbstractChannelSecurityConfig() {
 
     @Autowired
     private lateinit var securityProperties: SecurityProperties
@@ -29,6 +30,7 @@ class BrowserSecurityConfig : AbstractChannelSecurityConfig() {
     @Autowired
     private lateinit var dataSource: DataSource
 
+    @Qualifier("customUserDetailsService")
     @Autowired
     private lateinit var userDetailsService: UserDetailsService
 
@@ -68,12 +70,12 @@ class BrowserSecurityConfig : AbstractChannelSecurityConfig() {
     }
 
     @Bean
-    fun passwordEncoder(): PasswordEncoder {
+    open fun passwordEncoder(): PasswordEncoder {
         return BCryptPasswordEncoder()
     }
 
     @Bean
-    fun persistentTokenRepository(): PersistentTokenRepository {
+    open fun persistentTokenRepository(): PersistentTokenRepository {
         val tokenRepository = JdbcTokenRepositoryImpl()
         tokenRepository.setDataSource(dataSource)
 //        		tokenRepository.setCreateTableOnStartup(true)

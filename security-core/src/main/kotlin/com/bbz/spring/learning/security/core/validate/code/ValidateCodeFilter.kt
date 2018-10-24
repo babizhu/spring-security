@@ -20,7 +20,6 @@ import javax.servlet.http.HttpServletResponse
 /**
  * 校验验证码的过滤器
  *
- * @author zhailiang
  */
 @Component("validateCodeFilter")
 open class ValidateCodeFilter : OncePerRequestFilter(), InitializingBean {
@@ -29,7 +28,7 @@ open class ValidateCodeFilter : OncePerRequestFilter(), InitializingBean {
      * 验证码校验失败处理器
      */
     @Autowired
-    private lateinit var authenticationFailureHandler: AuthenticationFailureHandler
+    private lateinit var customAuthenticationFailureHandler: AuthenticationFailureHandler
     /**
      * 系统配置信息
      */
@@ -96,7 +95,7 @@ open class ValidateCodeFilter : OncePerRequestFilter(), InitializingBean {
                 validateCodeProcessorHolder.findValidateCodeProcessor(type).validate(ServletWebRequest(request, response))
                 logger.info("验证码校验通过")
             } catch (exception: ValidateCodeException) {
-                authenticationFailureHandler.onAuthenticationFailure(request, response, exception)
+                customAuthenticationFailureHandler.onAuthenticationFailure(request, response, exception)
                 return
             }
 
