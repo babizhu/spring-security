@@ -114,7 +114,7 @@ open class ValidateCodeFilter : OncePerRequestFilter(), InitializingBean {
      */
     private fun getValidateCodeType(request: HttpServletRequest): ValidateCodeType? {
         var result: ValidateCodeType? = null
-        if (request.method.toLowerCase() != "get") {
+        if (request.method.toLowerCase() != "get" ) {//如果要验证非登录的url，就不能加这个判断了，因为非登录url的访问的方法可能是Method.Get
             val urls = urlMap.keys
             for (url in urls) {
                 if (pathMatcher.match(url, request.requestURI)) {

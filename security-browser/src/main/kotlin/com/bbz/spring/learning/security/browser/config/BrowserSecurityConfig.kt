@@ -7,11 +7,11 @@ import com.bbz.spring.learning.security.core.authentication.AbstractChannelSecur
 import com.bbz.spring.learning.security.core.authentication.mobile.SmsCodeAuthenticationSecurityConfig
 import com.bbz.spring.learning.security.core.properties.SecurityConstants
 import com.bbz.spring.learning.security.core.properties.SecurityProperties
-import com.bbz.spring.learning.security.core.validate.code.ValidateCodeSecurityConfig
+import com.bbz.spring.learning.security.core.validate.code.config.ValidateCodeSecurityConfig
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -20,7 +20,7 @@ import org.springframework.security.web.authentication.rememberme.PersistentToke
 import javax.sql.DataSource
 
 
-@Configuration
+@EnableWebSecurity
 class BrowserSecurityConfig : AbstractChannelSecurityConfig() {
 
     @Autowired

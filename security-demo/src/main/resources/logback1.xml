@@ -147,7 +147,7 @@
     <!--<logger name="com.ibatis.common.jdbc.ScriptRunner" level="DEBUG"/>-->
     <!--<logger name="com.ibatis.sqlmap.engine.impl.SqlMapClientDelegate" level="DEBUG" />-->
     <!-- root级别   DEBUG -->
-    <root level="info">
+    <root level="debug">
         <!-- 控制台输出 -->
         <appender-ref ref="STDOUT" />
         <!-- 文件输出，暂时屏蔽以下5行，免得占用磁盘空间 -->

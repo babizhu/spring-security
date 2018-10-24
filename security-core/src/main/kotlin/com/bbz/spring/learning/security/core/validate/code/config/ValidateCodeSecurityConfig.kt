@@ -1,4 +1,4 @@
-package com.bbz.spring.learning.security.core.validate.code
+package com.bbz.spring.learning.security.core.validate.code.config
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter
@@ -8,7 +8,7 @@ import org.springframework.security.web.authentication.preauth.AbstractPreAuthen
 import org.springframework.stereotype.Component
 import javax.servlet.Filter
 
-@Component("validateCodeSecurityConfig")
+@Component
 class ValidateCodeSecurityConfig : SecurityConfigurerAdapter<DefaultSecurityFilterChain, HttpSecurity>() {
 
     @Autowired

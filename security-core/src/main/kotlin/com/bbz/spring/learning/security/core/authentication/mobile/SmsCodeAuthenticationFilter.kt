@@ -37,7 +37,7 @@ class SmsCodeAuthenticationFilter :
                     "Authentication method not supported: " + request.method)
         }
 
-        val mobile: String = obtainMobile(request).trim()
+        val mobile = obtainMobile(request).trim()
 
 
         val authRequest = SmsCodeAuthenticationToken(mobile)

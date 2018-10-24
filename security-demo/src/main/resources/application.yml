@@ -1,5 +1,6 @@
 spring:
-
+  profiles:
+    active: dev
   security:
     user:
       name: bbz
@@ -22,9 +23,10 @@ bbz:
       image:
         length: 4
 #        width: 100
-#        url: /user/*
       sms:
         length: 6
+        url: /user/*
+
 
     browser:
       t: t
