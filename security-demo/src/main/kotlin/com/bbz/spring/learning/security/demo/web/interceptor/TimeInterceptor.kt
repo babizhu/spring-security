@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse
 @Component
 class TimeInterceptor:HandlerInterceptor  {
     companion object {
-        val log = LoggerFactory.getLogger(TimeInterceptor::class.java)!!
+        val log = LoggerFactory.getLogger(TimeInterceptor::class.java)
     }
     override fun preHandle(request: HttpServletRequest, response: HttpServletResponse, handler: Any): Boolean {
         log.info("preHandle")

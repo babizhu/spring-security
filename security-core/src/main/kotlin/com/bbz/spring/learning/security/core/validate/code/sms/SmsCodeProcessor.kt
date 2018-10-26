@@ -9,7 +9,7 @@ import org.springframework.web.context.request.ServletWebRequest
 @Component("smsValidateCodeProcessor")
 class SmsCodeProcessor : AbstractValidateCodeProcessor<SmsCode>() {
     @Autowired
-    private lateinit var smsCodeSender: SmsCodeSender
+    private lateinit var smsCodeSender: ISmsCodeSender
 
     override fun send(request: ServletWebRequest, validateCode: SmsCode) {
         val paramName = SecurityConstants.DEFAULT_PARAMETER_NAME_MOBILE

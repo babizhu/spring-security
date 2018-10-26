@@ -4,7 +4,7 @@ import com.bbz.spring.learning.security.core.properties.SecurityProperties
 import com.bbz.spring.learning.security.core.validate.code.IValidateCodeGenerator
 import com.bbz.spring.learning.security.core.validate.code.image.ImageCodeGenerator
 import com.bbz.spring.learning.security.core.validate.code.sms.DefaultSmsCodeSender
-import com.bbz.spring.learning.security.core.validate.code.sms.SmsCodeSender
+import com.bbz.spring.learning.security.core.validate.code.sms.ISmsCodeSender
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean
@@ -27,9 +27,9 @@ open class ValidateCodeBeanConfig {
     @Bean
     @ConditionalOnMissingBean(name = ["imageValidateCodeGenerator"])
     open fun imageValidateCodeGenerator(): IValidateCodeGenerator {
-        val codeGenerator = ImageCodeGenerator()
-        codeGenerator.securityProperties = securityProperties
-        return codeGenerator
+        val imageCodeGenerator = ImageCodeGenerator()
+        imageCodeGenerator.securityProperties = securityProperties
+        return imageCodeGenerator
     }
 
     /**
@@ -37,8 +37,8 @@ open class ValidateCodeBeanConfig {
      * @return
      */
     @Bean
-    @ConditionalOnMissingBean(SmsCodeSender::class)
-    open fun smsCodeSender(): SmsCodeSender {
+    @ConditionalOnMissingBean(ISmsCodeSender::class)
+    open fun smsCodeSender(): ISmsCodeSender {
         return DefaultSmsCodeSender()
     }
 

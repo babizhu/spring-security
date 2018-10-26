@@ -11,4 +11,4 @@ import kotlin.reflect.KClass
 @Target(AnnotationTarget.FIELD,AnnotationTarget.FUNCTION)
 @Retention()
 @Constraint(validatedBy = [MyConstraintValidator::class])
-annotation class MyConstraint(val message: String, val groups: Array<KClass<*>> = arrayOf(), val payload: Array<KClass<out Payload>> = arrayOf())
+annotation class MyConstraint(val message: String, val groups: Array<KClass<*>> = [], val payload: Array<KClass<out Payload>> = [])

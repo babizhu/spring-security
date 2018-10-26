@@ -10,7 +10,7 @@ import java.awt.image.BufferedImage
 import java.util.*
 
 //@Component
-//故意省略了上面一行的@Component，而把配置工作放到了@ValidateCodeBeanConfig中，这样有利于有条件的产生此Component
+//故意省略了上面一行的@Component，而把配置工作放到了@link ValidateCodeBeanConfig，这样有利于有条件的产生此Component
 class ImageCodeGenerator: IValidateCodeGenerator {
 
     lateinit var securityProperties: SecurityProperties

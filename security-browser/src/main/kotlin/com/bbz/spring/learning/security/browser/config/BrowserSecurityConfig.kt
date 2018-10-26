@@ -9,7 +9,6 @@ import com.bbz.spring.learning.security.core.properties.SecurityConstants
 import com.bbz.spring.learning.security.core.properties.SecurityProperties
 import com.bbz.spring.learning.security.core.validate.code.config.ValidateCodeSecurityConfig
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.annotation.Bean
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
@@ -20,7 +19,10 @@ import org.springframework.security.web.authentication.rememberme.JdbcTokenRepos
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository
 import javax.sql.DataSource
 
-
+/**
+ * 整个Security 配置中心的主干，一切配置都在这列汇总
+ */
+@Suppress("SpringJavaInjectionPointsAutowiringInspection")
 @EnableWebSecurity
 open class BrowserSecurityConfig : AbstractChannelSecurityConfig() {
 
@@ -30,9 +32,9 @@ open class BrowserSecurityConfig : AbstractChannelSecurityConfig() {
     @Autowired
     private lateinit var dataSource: DataSource
 
-    @Qualifier("customUserDetailsService")
+
     @Autowired
-    private lateinit var userDetailsService: UserDetailsService
+    private lateinit var customUserDetailsService: UserDetailsService
 
     @Autowired
     private lateinit var smsCodeAuthenticationSecurityConfig: SmsCodeAuthenticationSecurityConfig
@@ -46,14 +48,15 @@ open class BrowserSecurityConfig : AbstractChannelSecurityConfig() {
 
         applyPasswordAuthenticationConfig(http)
 
-        http.apply(validateCodeSecurityConfig)
+        http
+                .apply(validateCodeSecurityConfig)
                 .and()
                 .apply(smsCodeAuthenticationSecurityConfig)
                 .and()
                 .rememberMe()
                 .tokenRepository(persistentTokenRepository())
                 .tokenValiditySeconds(securityProperties.browser.rememberMeSeconds)
-                .userDetailsService(userDetailsService)
+                .userDetailsService(customUserDetailsService)
                 .and()
                 .authorizeRequests()
                 .antMatchers(
@@ -74,7 +77,7 @@ open class BrowserSecurityConfig : AbstractChannelSecurityConfig() {
         return BCryptPasswordEncoder()
     }
 
-    @Bean
+//    @Bean
     open fun persistentTokenRepository(): PersistentTokenRepository {
         val tokenRepository = JdbcTokenRepositoryImpl()
         tokenRepository.setDataSource(dataSource)

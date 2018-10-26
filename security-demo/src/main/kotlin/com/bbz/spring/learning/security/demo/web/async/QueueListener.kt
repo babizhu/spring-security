@@ -5,23 +5,30 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationListener
 import org.springframework.context.event.ContextRefreshedEvent
 import org.springframework.stereotype.Component
+import java.lang.RuntimeException
 
 @Component
 class QueueListener : ApplicationListener<ContextRefreshedEvent> {
 
 
-    private val log = LoggerFactory.getLogger(javaClass)!!
+    private val log = LoggerFactory.getLogger(javaClass)
     override fun onApplicationEvent(p0: ContextRefreshedEvent) {
         Thread {
             while (true) {
                 val orderNumber = mockQueue.completeOrder
                 if (!orderNumber.isNullOrBlank()) {
                     log.info("返回订单处理结果:$orderNumber")
-                    deferredResultHolder.map[orderNumber]!!.setResult("place order success")
-                    mockQueue.completeOrder = null
+                    val deferredResult = deferredResultHolder.map[orderNumber]
+                    if (deferredResult == null) {
+                        throw RuntimeException("订单结果没找到")
+                    } else {
+                        deferredResult.setResult("place order success")
+                        mockQueue.completeOrder = null
+                    }
                 } else {
-                    Thread.sleep(100)
+                    Thread.sleep(1000)
                 }
+//                log.info("${Thread.currentThread().name}ContextRefreshedEvent")
             }
         }.start()
     }

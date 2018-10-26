@@ -15,7 +15,7 @@ class TimeFilter : Filter {
 
     }
 
-    override fun doFilter(request: ServletRequest?, response: ServletResponse?, chain: FilterChain) {
+    override fun doFilter(request: ServletRequest?, response: ServletResponse, chain: FilterChain) {
         log.info("time filter start")
         val start = System.currentTimeMillis()
         chain.doFilter(request,response)

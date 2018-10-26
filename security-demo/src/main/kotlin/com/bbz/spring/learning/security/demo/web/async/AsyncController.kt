@@ -1,18 +1,16 @@
 package com.bbz.spring.learning.security.demo.web.async
 
-import com.bbz.spring.learning.security.demo.web.aspect.TimeAspect
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.context.request.async.DeferredResult
 import java.util.*
-import java.util.concurrent.Callable
 
 @RestController
 class AsyncController {
     companion object {
-        val log = LoggerFactory.getLogger(AsyncController::class.java)!!
+        val log = LoggerFactory.getLogger(AsyncController::class.java)
     }
     @Autowired
     lateinit var mockQueue: MockQueue

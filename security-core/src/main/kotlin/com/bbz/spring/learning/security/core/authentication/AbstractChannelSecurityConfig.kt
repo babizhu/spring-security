@@ -9,9 +9,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 
 
 /**
- * @author zhailiang
  */
-
 open class AbstractChannelSecurityConfig : WebSecurityConfigurerAdapter() {
 
     @Autowired

@@ -12,7 +12,10 @@ import org.springframework.web.context.request.ServletWebRequest
  * @author zhailiang
  */
 abstract class AbstractValidateCodeProcessor<C : ValidateCode> : IValidateCodeProcessor {
-private val SESSION_KEY_PREFIX = "session"
+    companion object {
+
+        private const val SESSION_KEY_PREFIX = "session"
+    }
     /**
      * 操作session的工具类
      */
@@ -25,7 +28,6 @@ private val SESSION_KEY_PREFIX = "session"
 
     /*
 	 * (non-Javadoc)
-	 *
 	 * @see
 	 * com.imooc.security.core.validate.code.ValidateCodeProcessor#create(org.
 	 * springframework.web.context.request.ServletWebRequest)

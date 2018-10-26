@@ -16,7 +16,5 @@ class SmsCodeAuthenticationProvider : AuthenticationProvider {
         val authenticationResult = SmsCodeAuthenticationToken(user, user.authorities)
         authenticationResult.details = authentication.details
         return authenticationResult
-
     }
-
 }

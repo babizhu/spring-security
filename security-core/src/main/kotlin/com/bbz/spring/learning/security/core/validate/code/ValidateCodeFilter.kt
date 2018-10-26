@@ -69,7 +69,7 @@ open class ValidateCodeFilter : OncePerRequestFilter(), InitializingBean {
      * @param type
      */
     private fun addUrlToMap(urlString: String, type: ValidateCodeType) {
-        if (!urlString.isNullOrBlank()) {
+        if (!urlString.isBlank()) {
             val urls = urlString.split(",")
             for (url in urls) {
                 urlMap[url] = type

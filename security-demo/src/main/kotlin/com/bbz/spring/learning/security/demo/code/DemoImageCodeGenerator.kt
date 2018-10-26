@@ -6,6 +6,7 @@ import org.springframework.web.context.request.ServletWebRequest
 import java.awt.Color
 import java.awt.image.BufferedImage
 
+@Suppress("unused")
 //@Component("imageCodeGenerator")
 class DemoImageCodeGenerator : IValidateCodeGenerator {
     override fun generate(request: ServletWebRequest): ImageCode {
